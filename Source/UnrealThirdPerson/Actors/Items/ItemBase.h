@@ -31,11 +31,8 @@ protected:
 	//Provide further information when in inventory
 	UPROPERTY(EditAnywhere)
 	FString Description;
-	//
+	//Image for item when in inventory
 	UPROPERTY(EditAnywhere)
-	class UMeshComponent* MeshComponent;
-	/*
-	UPROPERTY(EditAnywhere)
-	UImage* Icon;
-	*/
+	UTexture* Icon;
+
 };
