@@ -10,17 +10,9 @@ AItemBase::AItemBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void AItemBase::BeginPlay()
+//Get the name of this item
+FString AItemBase::GetName()
 {
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void AItemBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	return Name;
 }
 
