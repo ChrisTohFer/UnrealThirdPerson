@@ -37,3 +37,15 @@ bool ABaseInventory::AddItem(ABaseInventoryItem* NewItem)
 	}
 	else return false;
 }
+//Return the item stored at index, or nullptr if out of range
+ABaseInventoryItem * ABaseInventory::GetItem(int Index)
+{
+	if (Index < Items.Num())
+	{
+		return Items[Index];
+	}
+	else
+	{
+		return nullptr;
+	}
+}

@@ -16,11 +16,12 @@ class UNREALTHIRDPERSON_API AThirdPersonController : public APlayerController
 	
 public:
 
+	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
 protected:
 
-	//Call the toggle inventory visibility method on AThirdPersonHud
+	//Toggle inventory visibility and player input
 	void ToggleInventoryVisibility();
 
 	APawn* PlayerPawn;

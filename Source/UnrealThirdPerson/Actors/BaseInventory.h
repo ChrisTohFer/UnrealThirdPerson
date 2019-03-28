@@ -25,6 +25,9 @@ public:
 
 	//Add an item to the inventory; returns false if item was not added
 	virtual bool AddItem(ABaseInventoryItem* NewItem);
+	//Return the item stored at index, or nullptr if out of range
+	UFUNCTION(BlueprintCallable)
+	ABaseInventoryItem* GetItem(int Index);
 
 protected:
 	//Array of all items currently in inventory

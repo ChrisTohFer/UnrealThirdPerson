@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Engine/Texture.h"
 #include "BaseItem.h"
 
 #include "BaseInventoryItem.generated.h"
@@ -31,16 +30,16 @@ public:
 
 protected:
 	//Name to identify the item type
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString Name;
 
 	//Provide further information when in inventory
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString Description;
 
 	//Image for item when in inventory
-	UPROPERTY(EditAnywhere)
-	UTexture* Icon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTexture2D* Icon;
 
 	//Maximum number of this item that can stack in an inventory slot
 	UPROPERTY(EditAnywhere)

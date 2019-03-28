@@ -3,6 +3,12 @@
 #include "ThirdPersonController.h"
 #include "HUD/ThirdPersonHud.h"
 
+void AThirdPersonController::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
 void AThirdPersonController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -11,24 +17,30 @@ void AThirdPersonController::SetupInputComponent()
 	
 }
 
-//Call the toggle inventory visibility method on AThirdPersonHud
+//Toggle inventory visibility and player input
 void AThirdPersonController::ToggleInventoryVisibility()
 {
 	AThirdPersonHud* Hud = Cast<AThirdPersonHud>(GetHUD());
+	if (PlayerPawn == nullptr)
+	{
+		PlayerPawn = GetPawn();
+	}
 
 	if (Hud != nullptr)
 	{
-		if (PlayerPawn == nullptr)
+
+		if (Hud->GetInventoryVisible())
 		{
-			PlayerPawn = GetPawn();
-			SetPawn(nullptr);
+			SetPawn(PlayerPawn);
+			bShowMouseCursor = false;
+			Hud->SetInventoryVisible(false);
 		}
 		else
 		{
-			SetPawn(PlayerPawn);
-			PlayerPawn = nullptr;
+			SetPawn(nullptr);
+			bShowMouseCursor = true;
+			Hud->SetInventoryVisible(true);
 		}
 
-		Hud->ToggleInventoryVisibility();
 	}
 }
