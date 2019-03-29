@@ -22,7 +22,7 @@ public:
 	//Return the description of this item
 	FString GetDescription();
 	//Return the icon of this item
-	const UTexture* GetIcon();
+	const UTexture2D* GetIcon();
 	//Return the maximum quantity
 	int GetQuantityMax();
 	//Return the current quantity
@@ -51,6 +51,6 @@ protected:
 
 	//Pointer to non-inventory item blueprint
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<ABaseItem> ItemBlueprint;
+	TSubclassOf<class ABaseItem> ItemBlueprint;
 
 };

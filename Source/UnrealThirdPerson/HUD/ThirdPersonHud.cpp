@@ -25,7 +25,7 @@ void AThirdPersonHud::SetInventoryVisible(bool Visible)
 		IsInventoryVisible = false;
 	}
 }
-
+//Return true if inventory is visible
 bool AThirdPersonHud::GetInventoryVisible()
 {
 	return IsInventoryVisible;

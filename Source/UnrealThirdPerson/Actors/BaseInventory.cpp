@@ -2,6 +2,8 @@
 
 #include "BaseInventory.h"
 
+ABaseInventory* ABaseInventory::SingletonPtr = nullptr;
+
 // Sets default values
 ABaseInventory::ABaseInventory()
 {
@@ -10,6 +12,18 @@ ABaseInventory::ABaseInventory()
 
 }
 
+void ABaseInventory::BeginPlay()
+{
+	Super::BeginPlay();
+
+	SingletonPtr = this;
+}
+
+//Returns pointer to the inventory
+ABaseInventory * ABaseInventory::GetInventory()
+{
+	return SingletonPtr;
+}
 
 ABaseInventoryItem* ABaseInventory::GetItem(FString Name)
 {
@@ -25,7 +39,7 @@ ABaseInventoryItem* ABaseInventory::GetItem(FString Name)
 }
 bool ABaseInventory::IsFull()
 {
-	return Items.Num() >= MaxItems || MaxItems == 0;
+	return Items.Num() >= MaxItems && MaxItems != 0;
 }
 //Add an item to the inventory; returns false if item was not added
 bool ABaseInventory::AddItem(ABaseInventoryItem* NewItem)
@@ -33,6 +47,7 @@ bool ABaseInventory::AddItem(ABaseInventoryItem* NewItem)
 	if (!IsFull())
 	{
 		Items.Add(NewItem);
+		InventoryUpdated.Broadcast();
 		return true;
 	}
 	else return false;

@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BaseItem.h"
+#include "Actors/BaseInventory.h"
+#include "Engine/World.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 ABaseItem::ABaseItem()
@@ -10,17 +13,27 @@ ABaseItem::ABaseItem()
 
 }
 
-// Called when the game starts or when spawned
-void ABaseItem::BeginPlay()
+//Attempt to add the item to the inventory; returns false if inventory full
+bool ABaseItem::PickUpItem()
 {
-	Super::BeginPlay();
-	
+	ABaseInventory* Inventory = ABaseInventory::GetInventory();
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "PickUpItem called");
+
+	if (Inventory != nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "Inventory found");
+		if (!Inventory->IsFull())
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "Inventory not full");
+
+			ABaseInventoryItem* InventoryItem = GetWorld()->SpawnActor<ABaseInventoryItem>(InventoryItemBlueprint);
+			Inventory->AddItem(InventoryItem);
+			Destroy();
+
+			return true;
+		}
+		else return false;
+	}
+	else return false;
 }
-
-// Called every frame
-void ABaseItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

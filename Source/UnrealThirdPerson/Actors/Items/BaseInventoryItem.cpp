@@ -22,7 +22,7 @@ FString ABaseInventoryItem::GetDescription()
 	return Description;
 }
 //Return the icon of this item
-const UTexture * ABaseInventoryItem::GetIcon()
+const UTexture2D * ABaseInventoryItem::GetIcon()
 {
 	return Icon;
 }

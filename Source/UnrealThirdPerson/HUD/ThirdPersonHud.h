@@ -25,7 +25,12 @@ public:
 	//Set visibility state of the inventory
 	void SetInventoryVisible(bool Visible);
 	//Return true if inventory is visible
+	UFUNCTION(BlueprintCallable)
 	bool GetInventoryVisible();
+
+	//Reference to inventory
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//ABaseInventory* Inventory;
 
 protected:
 
@@ -37,10 +42,7 @@ protected:
 	UUserWidget* InventoryWidget;
 
 	//Is the inventory visible?
-	UPROPERTY(BlueprintReadOnly)
 	bool IsInventoryVisible = false;
 
-	//Reference to inventory
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	ABaseInventory* Inventory;
+	
 };
