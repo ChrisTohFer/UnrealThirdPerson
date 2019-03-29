@@ -3,7 +3,6 @@
 #include "BaseItem.h"
 #include "Actors/BaseInventory.h"
 #include "Engine/World.h"
-#include "Engine/Engine.h"
 
 // Sets default values
 ABaseItem::ABaseItem()
@@ -18,15 +17,10 @@ bool ABaseItem::PickUpItem()
 {
 	ABaseInventory* Inventory = ABaseInventory::GetInventory();
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "PickUpItem called");
-
 	if (Inventory != nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "Inventory found");
 		if (!Inventory->IsFull())
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "Inventory not full");
-
 			ABaseInventoryItem* InventoryItem = GetWorld()->SpawnActor<ABaseInventoryItem>(InventoryItemBlueprint);
 			Inventory->AddItem(InventoryItem);
 			Destroy();

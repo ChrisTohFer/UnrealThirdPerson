@@ -17,6 +17,10 @@ public:
 	// Sets default values for this actor's properties
 	ABaseInventoryItem();
 
+	//Attempt to drop item into world; return true if successful
+	bool DropItem(FVector Location, FRotator Rotation);
+
+	//Get methods
 	//Return the name of this item
 	FString GetName();
 	//Return the description of this item

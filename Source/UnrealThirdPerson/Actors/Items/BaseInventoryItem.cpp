@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BaseInventoryItem.h"
+#include "Engine/World.h"
 
 // Sets default values
 ABaseInventoryItem::ABaseInventoryItem()
@@ -10,6 +11,20 @@ ABaseInventoryItem::ABaseInventoryItem()
 
 }
 
+
+//Attempt to drop item into world; return true if successful
+bool ABaseInventoryItem::DropItem(FVector Location, FRotator Rotation)
+{
+	if (ItemBlueprint != nullptr)
+	{
+		GetWorld()->SpawnActor<ABaseItem>(ItemBlueprint, Location, Rotation);
+		return true;
+	}
+	else return false;
+}
+
+
+//Get methods
 
 //Return the name of this item
 FString ABaseInventoryItem::GetName()

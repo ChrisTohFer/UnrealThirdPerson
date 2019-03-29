@@ -2,8 +2,9 @@
 
 #include "BaseInventory.h"
 
-ABaseInventory* ABaseInventory::SingletonPtr = nullptr;
 
+//Initialisation
+ABaseInventory* ABaseInventory::SingletonPtr = nullptr;
 // Sets default values
 ABaseInventory::ABaseInventory()
 {
@@ -11,7 +12,7 @@ ABaseInventory::ABaseInventory()
 	PrimaryActorTick.bCanEverTick = true;
 
 }
-
+//Set static pointer to inventory
 void ABaseInventory::BeginPlay()
 {
 	Super::BeginPlay();
@@ -19,24 +20,17 @@ void ABaseInventory::BeginPlay()
 	SingletonPtr = this;
 }
 
+//Static functions
+
 //Returns pointer to the inventory
 ABaseInventory * ABaseInventory::GetInventory()
 {
 	return SingletonPtr;
 }
 
-ABaseInventoryItem* ABaseInventory::GetItem(FString Name)
-{
-	for (int i = 0; i < Items.Num(); ++i)
-	{
-		if (Items[i] != nullptr && Items[i]->GetName() == Name)
-		{
-			return Items[i];
-		}
-	}
+//Functions
 
-	return nullptr;
-}
+//Return true if inventory is full
 bool ABaseInventory::IsFull()
 {
 	return Items.Num() >= MaxItems && MaxItems != 0;
@@ -52,6 +46,25 @@ bool ABaseInventory::AddItem(ABaseInventoryItem* NewItem)
 	}
 	else return false;
 }
+//Attempts to drop item back into world
+bool ABaseInventory::DropItem(int Index, FVector Position, FRotator Rotator)
+{
+	ABaseInventoryItem* InventoryItem = GetItem(Index);
+
+	if (InventoryItem != nullptr)
+	{
+		if (InventoryItem->DropItem(Position, Rotator))
+		{
+			Items.RemoveAt(Index);
+			InventoryItem->Destroy();
+			InventoryUpdated.Broadcast();
+			return true;
+		}
+		else return false;
+		
+	}
+	else return false;
+}
 //Return the item stored at index, or nullptr if out of range
 ABaseInventoryItem * ABaseInventory::GetItem(int Index)
 {
@@ -63,4 +76,17 @@ ABaseInventoryItem * ABaseInventory::GetItem(int Index)
 	{
 		return nullptr;
 	}
+}
+//Return pointer to inventory item, or nullptr if not present
+ABaseInventoryItem* ABaseInventory::GetItem(FString Name)
+{
+	for (int i = 0; i < Items.Num(); ++i)
+	{
+		if (Items[i] != nullptr && Items[i]->GetName() == Name)
+		{
+			return Items[i];
+		}
+	}
+
+	return nullptr;
 }
