@@ -46,11 +46,11 @@ protected:
 	UTexture2D* Icon;
 
 	//Maximum number of this item that can stack in an inventory slot
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int QuantityMax = 1;
 
 	//Current number of this item
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int Quantity = 1;
 
 	//Pointer to non-inventory item blueprint

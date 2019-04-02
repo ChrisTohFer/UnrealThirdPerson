@@ -25,8 +25,12 @@ public:
 protected:
 
 	
-	//
+	//Blueprint for spawning inventory form during item pickup
 	UPROPERTY(EditAnywhere)
 	class TSubclassOf<class ABaseInventoryItem> InventoryItemBlueprint;
+
+	//The quantity represented by this item (mostly for ammo)
+	UPROPERTY(EditAnywhere)
+	int Quantity = 1;
 
 };
