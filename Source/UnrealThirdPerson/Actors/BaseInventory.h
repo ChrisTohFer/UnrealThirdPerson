@@ -35,12 +35,23 @@ public:
 	//Functions
 	
 	
-	//Return true if inventory is full
+	//Return true if all inventory slots are occupied (not necessarily to capacity)
 	bool IsFull();
+	//For a given item, returns how many more can be held
+	UFUNCTION(BlueprintCallable)
+	virtual int GetRemainingCapacity(ABaseInventoryItem* NewItem);
 
+	/*
+	*Pick up an item, either adding quantity to existing stack or creating a new one
+	*Will either destroy NewItem or add to array
+	*/
+	UFUNCTION(BlueprintCallable)
+	virtual int PickUpItem(ABaseInventoryItem* NewItem);
+	/*
 	//Add an item to the inventory; returns false if item was not added
 	UFUNCTION(BlueprintCallable)
 	virtual bool AddItem(ABaseInventoryItem* NewItem);
+	*/
 	//Attempts to drop item back into world
 	UFUNCTION(BlueprintCallable)
 	virtual bool DropItem(int Index, FVector Position = FVector::ZeroVector, FRotator Rotator = FRotator::ZeroRotator);

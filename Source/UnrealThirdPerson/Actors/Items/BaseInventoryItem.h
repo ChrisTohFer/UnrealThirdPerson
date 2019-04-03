@@ -31,6 +31,10 @@ public:
 	int GetQuantityMax();
 	//Return the current quantity
 	int GetQuantity();
+	//Change the quantity and return the new quantity
+	int ChangeQuantity(int Change);
+	//Set the value of quantity
+	void SetQuantity(int NewQuantity);
 
 protected:
 	//Name to identify the item type

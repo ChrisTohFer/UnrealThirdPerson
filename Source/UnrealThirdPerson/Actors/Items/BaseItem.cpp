@@ -12,22 +12,22 @@ ABaseItem::ABaseItem()
 
 }
 
-//Attempt to add the item to the inventory; returns false if inventory full
-bool ABaseItem::PickUpItem()
+//Attempt to pick up the item
+void ABaseItem::PickUpItem()
 {
 	ABaseInventory* Inventory = ABaseInventory::GetInventory();
 
 	if (Inventory != nullptr)
 	{
-		if (!Inventory->IsFull())
-		{
-			ABaseInventoryItem* InventoryItem = GetWorld()->SpawnActor<ABaseInventoryItem>(InventoryItemBlueprint);
-			Inventory->AddItem(InventoryItem);
-			Destroy();
+		ABaseInventoryItem* InventoryItem = GetWorld()->SpawnActor<ABaseInventoryItem>(InventoryItemBlueprint);
+		InventoryItem->SetQuantity(Quantity);
 
-			return true;
+		int PickedUp = Inventory->PickUpItem(InventoryItem);
+		Quantity -= PickedUp;
+		
+		if (Quantity <= 0)
+		{
+			Destroy();
 		}
-		else return false;
 	}
-	else return false;
 }

@@ -2,7 +2,6 @@
 
 #include "BaseInventory.h"
 
-
 //Initialisation
 ABaseInventory* ABaseInventory::SingletonPtr = nullptr;
 // Sets default values
@@ -30,11 +29,64 @@ ABaseInventory * ABaseInventory::GetInventory()
 
 //Functions
 
-//Return true if inventory is full
+//Return true if all inventory slots are occupied (not necessarily to capacity)
 bool ABaseInventory::IsFull()
 {
 	return Items.Num() >= MaxItems && MaxItems != 0;
 }
+//For a given item, returns how many more can be held
+int ABaseInventory::GetRemainingCapacity(ABaseInventoryItem * NewItem)
+{
+	ABaseInventoryItem* ItemInInventory = GetItem(NewItem->GetName());
+
+	if (ItemInInventory != nullptr)
+	{
+		return ItemInInventory->GetQuantityMax() - ItemInInventory->GetQuantity();
+	}
+	else if(IsFull())
+	{
+		return 0;
+	}
+	else
+	{
+		return NewItem->GetQuantityMax();
+	}
+}
+/*
+	*Pick up an item, either adding quantity to existing stack or creating a new one
+	*Will either destroy NewItem or add to array
+*/
+int ABaseInventory::PickUpItem(ABaseInventoryItem* NewItem)
+{
+	int RemainingCapacity = GetRemainingCapacity(NewItem);
+
+	if (RemainingCapacity > 0)
+	{
+		int AddedQuantity = FMath::Min(RemainingCapacity, NewItem->GetQuantity());
+		ABaseInventoryItem* ItemInInventory = GetItem(NewItem->GetName());
+
+		if (ItemInInventory != nullptr)
+		{
+			ItemInInventory->ChangeQuantity(AddedQuantity);
+			NewItem->Destroy();
+		}
+		else
+		{
+			Items.Add(NewItem);
+			NewItem->SetQuantity(AddedQuantity);
+		}
+
+		InventoryUpdated.Broadcast();
+
+		return AddedQuantity;
+	}
+	else
+	{
+		NewItem->Destroy();
+		return 0;
+	}
+}
+/*
 //Add an item to the inventory; returns false if item was not added
 bool ABaseInventory::AddItem(ABaseInventoryItem* NewItem)
 {
@@ -45,7 +97,7 @@ bool ABaseInventory::AddItem(ABaseInventoryItem* NewItem)
 		return true;
 	}
 	else return false;
-}
+}*/
 //Attempts to drop item back into world
 bool ABaseInventory::DropItem(int Index, FVector Position, FRotator Rotator)
 {

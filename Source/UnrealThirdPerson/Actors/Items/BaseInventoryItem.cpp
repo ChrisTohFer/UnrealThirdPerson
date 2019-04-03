@@ -51,3 +51,14 @@ int ABaseInventoryItem::GetQuantity()
 {
 	return Quantity;
 }
+//Change the quantity and return the new quantity
+int ABaseInventoryItem::ChangeQuantity(int Change)
+{
+	Quantity += Change;
+	return Quantity;
+}
+//Set the value of quantity
+void ABaseInventoryItem::SetQuantity(int NewQuantity)
+{
+	Quantity = NewQuantity;
+}

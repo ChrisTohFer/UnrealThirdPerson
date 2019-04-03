@@ -20,7 +20,7 @@ public:
 
 	//Attempt to add the item to the inventory; returns false if inventory full
 	UFUNCTION(BlueprintCallable)
-	virtual bool PickUpItem();
+	virtual void PickUpItem();
 
 protected:
 
