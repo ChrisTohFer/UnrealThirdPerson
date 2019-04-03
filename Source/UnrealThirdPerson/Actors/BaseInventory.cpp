@@ -105,7 +105,7 @@ bool ABaseInventory::DropItem(int Index, FVector Position, FRotator Rotator)
 
 	if (InventoryItem != nullptr)
 	{
-		if (InventoryItem->DropItem(Position, Rotator))
+		if (InventoryItem->DropItem(Position, Rotator, InventoryItem->GetQuantity()))
 		{
 			Items.RemoveAt(Index);
 			InventoryItem->Destroy();
@@ -141,4 +141,17 @@ ABaseInventoryItem* ABaseInventory::GetItem(FString Name)
 	}
 
 	return nullptr;
+}
+//Return index of item
+int ABaseInventory::GetItemIndex(ABaseInventoryItem * Item)
+{
+	for (int i = 0; i < Items.Num(); ++i)
+	{
+		if (Item == Items[i])
+		{
+			return i;
+		}
+	}
+
+	return Items.Num();
 }

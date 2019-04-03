@@ -31,3 +31,8 @@ void ABaseItem::PickUpItem()
 		}
 	}
 }
+//Set the quantity of the item
+void ABaseItem::SetQuantity(int NewQuantity)
+{
+	Quantity = NewQuantity;
+}

@@ -18,7 +18,7 @@ public:
 	ABaseInventoryItem();
 
 	//Attempt to drop item into world; return true if successful
-	bool DropItem(FVector Location, FRotator Rotation);
+	bool DropItem(FVector Location, FRotator Rotation, int Quantity);
 
 	//Get methods
 	//Return the name of this item

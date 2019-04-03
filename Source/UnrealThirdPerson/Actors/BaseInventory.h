@@ -60,7 +60,9 @@ public:
 	ABaseInventoryItem* GetItem(int Index);
 	//Return pointer to inventory item, or nullptr if not present
 	ABaseInventoryItem* GetItem(FString Name);
-	
+	//Return index of item, or size of item array if item is not present
+	UFUNCTION(BlueprintCallable)
+	int GetItemIndex(ABaseInventoryItem* Item);
 
 protected:
 	//Array of all items currently in inventory

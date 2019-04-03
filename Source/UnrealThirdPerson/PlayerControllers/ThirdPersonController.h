@@ -16,8 +16,16 @@ class UNREALTHIRDPERSON_API AThirdPersonController : public APlayerController
 	
 public:
 
+	//Initialitation
+
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+
+	//Functions
+	
+	//Returns the player pawn
+	UFUNCTION(BlueprintCallable)
+	APawn* GetPlayerPawn();
 
 protected:
 

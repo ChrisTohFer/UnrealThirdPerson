@@ -16,6 +16,18 @@ void AThirdPersonController::SetupInputComponent()
 	InputComponent->BindAction("ShowInventory", IE_Pressed, this, &AThirdPersonController::ToggleInventoryVisibility);
 	
 }
+//Returns the player pawn
+APawn * AThirdPersonController::GetPlayerPawn()
+{
+	if(PlayerPawn != nullptr)
+	{ 
+		return PlayerPawn;
+	}
+	else
+	{
+		return GetPawn();
+	}
+}
 
 //Toggle inventory visibility and player input
 void AThirdPersonController::ToggleInventoryVisibility()
