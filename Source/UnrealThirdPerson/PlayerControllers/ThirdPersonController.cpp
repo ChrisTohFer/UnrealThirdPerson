@@ -37,19 +37,21 @@ void AThirdPersonController::ToggleInventoryVisibility()
 	{
 		PlayerPawn = GetPawn();
 	}
-
+	
 	if (Hud != nullptr)
 	{
 
 		if (Hud->GetInventoryVisible())
 		{
-			SetPawn(PlayerPawn);
+			//Close inventory
+			PlayerPawn->EnableInput(this);//SetPawn(PlayerPawn);
 			bShowMouseCursor = false;
 			Hud->SetInventoryVisible(false);
 		}
 		else
 		{
-			SetPawn(nullptr);
+			//Open inventory
+			PlayerPawn->DisableInput(this);//SetPawn(nullptr);
 			bShowMouseCursor = true;
 			Hud->SetInventoryVisible(true);
 		}
