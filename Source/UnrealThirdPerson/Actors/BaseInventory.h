@@ -55,6 +55,9 @@ public:
 	//Attempts to drop item back into world
 	UFUNCTION(BlueprintCallable)
 	virtual bool DropItem(int Index, FVector Position = FVector::ZeroVector, FRotator Rotator = FRotator::ZeroRotator);
+	//Remove item from the inventory without dropping
+	UFUNCTION(BlueprintCallable)
+	virtual void RemoveItem(int index);
 	//Return the item stored at index, or nullptr if out of range
 	UFUNCTION(BlueprintCallable)
 	ABaseInventoryItem* GetItem(int Index);

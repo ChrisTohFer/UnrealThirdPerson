@@ -117,6 +117,22 @@ bool ABaseInventory::DropItem(int Index, FVector Position, FRotator Rotator)
 	}
 	else return false;
 }
+//Remove item from the inventory without dropping
+void ABaseInventory::RemoveItem(int index)
+{
+	if (Items.Num() > index)
+	{
+		ABaseInventoryItem* Item = Items[index];
+
+		Items.RemoveAt(index);
+		if (Item != nullptr)
+		{
+			Item->Destroy();
+		}
+
+		InventoryUpdated.Broadcast();
+	}
+}
 //Return the item stored at index, or nullptr if out of range
 ABaseInventoryItem * ABaseInventory::GetItem(int Index)
 {

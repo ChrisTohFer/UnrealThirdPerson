@@ -61,4 +61,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABaseItem> ItemBlueprint;
 
+	//Remove item from inventory if quantity is <= 0
+	void RemoveIfEmpty();
 };

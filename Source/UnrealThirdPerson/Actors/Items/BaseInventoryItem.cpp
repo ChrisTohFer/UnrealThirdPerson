@@ -2,6 +2,7 @@
 
 #include "BaseInventoryItem.h"
 #include "Engine/World.h"
+#include "Actors/BaseInventory.h"
 
 // Sets default values
 ABaseInventoryItem::ABaseInventoryItem()
@@ -56,10 +57,29 @@ int ABaseInventoryItem::GetQuantity()
 int ABaseInventoryItem::ChangeQuantity(int Change)
 {
 	Quantity += Change;
+
+	RemoveIfEmpty();
+
 	return Quantity;
 }
 //Set the value of quantity
 void ABaseInventoryItem::SetQuantity(int NewQuantity)
 {
 	Quantity = NewQuantity;
+
+	RemoveIfEmpty();
+}
+//Remove item from inventory if quantity is <= 0
+void ABaseInventoryItem::RemoveIfEmpty()
+{
+	if (Quantity <= 0)
+	{
+		ABaseInventory* Inventory = ABaseInventory::GetInventory();
+
+		if (Inventory != nullptr)
+		{
+			Inventory->RemoveItem(Inventory->GetItemIndex(this));
+		}
+		Destroy();
+	}
 }
