@@ -37,7 +37,7 @@ bool ABaseInventory::IsFull()
 //For a given item, returns how many more can be held
 int ABaseInventory::GetRemainingCapacity(ABaseInventoryItem * NewItem)
 {
-	ABaseInventoryItem* ItemInInventory = GetItem(NewItem->GetName());
+	ABaseInventoryItem* ItemInInventory = GetItemByName(NewItem->GetName());
 
 	if (ItemInInventory != nullptr)
 	{
@@ -63,7 +63,7 @@ int ABaseInventory::PickUpItem(ABaseInventoryItem* NewItem)
 	if (RemainingCapacity > 0)
 	{
 		int AddedQuantity = FMath::Min(RemainingCapacity, NewItem->GetQuantity());
-		ABaseInventoryItem* ItemInInventory = GetItem(NewItem->GetName());
+		ABaseInventoryItem* ItemInInventory = GetItemByName(NewItem->GetName());
 
 		if (ItemInInventory != nullptr)
 		{
@@ -130,7 +130,7 @@ ABaseInventoryItem * ABaseInventory::GetItem(int Index)
 	}
 }
 //Return pointer to inventory item, or nullptr if not present
-ABaseInventoryItem* ABaseInventory::GetItem(FString Name)
+ABaseInventoryItem* ABaseInventory::GetItemByName(FString Name)
 {
 	for (int i = 0; i < Items.Num(); ++i)
 	{
