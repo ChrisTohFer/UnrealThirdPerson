@@ -17,6 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	ABaseItem();
 
+	virtual void BeginPlay() override;
 
 	//Attempt to add the item to the inventory; returns false if inventory full
 	UFUNCTION(BlueprintCallable)

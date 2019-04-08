@@ -12,6 +12,11 @@ ABaseItem::ABaseItem()
 
 }
 
+void ABaseItem::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 //Attempt to pick up the item
 void ABaseItem::PickUpItem()
 {

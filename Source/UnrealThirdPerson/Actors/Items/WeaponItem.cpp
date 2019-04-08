@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
+#include "Components/SkeletalMeshComponent.h"
 
 AWeaponItem::AWeaponItem()
 {
@@ -17,7 +18,11 @@ AWeaponItem::AWeaponItem()
 
 void AWeaponItem::BeginPlay()
 {
+	Super::BeginPlay();
+
 	LastTimeFired = UGameplayStatics::GetTimeSeconds(GetWorld()) - Cooldown;
+
+	AmmoDestroyedFunction.BindUFunction(this, "AmmoDestroyed");
 }
 
 //Set weapon parent to player, disable collider
@@ -28,8 +33,8 @@ void AWeaponItem::Equip()
 	
 	//Attach to the player
 	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, true);
-	AttachToActor(Player, AttachRules, "Gun");
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, false);
+	Mesh->AttachToComponent(Player->GetMesh(), AttachRules, FName("Gun"));
 }
 
 //Attempt to fire the weapon; returns false if unable to fire for any reason
@@ -77,4 +82,19 @@ void AWeaponItem::GetAmmoPtr()
 	{
 		AmmoPtr = Inventory->GetItemByName(AmmoType);
 	}
+	else
+	{
+		AmmoPtr = nullptr;
+	}
+
+	if (AmmoPtr != nullptr)
+	{
+		AmmoPtr->OnDestroyed.Add(AmmoDestroyedFunction);
+	}
+}
+//Null the ammo pointer when ammo item is destroyed
+void AWeaponItem::AmmoDestroyed()
+{
+	AmmoPtr->OnDestroyed.Remove(AmmoDestroyedFunction);
+	AmmoPtr = nullptr;
 }

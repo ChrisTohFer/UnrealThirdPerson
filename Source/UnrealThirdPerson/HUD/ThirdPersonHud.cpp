@@ -14,15 +14,18 @@ void AThirdPersonHud::BeginPlay()
 //Set visibility state of the inventory
 void AThirdPersonHud::SetInventoryVisible(bool Visible)
 {
-	if (Visible)
+	if (InventoryWidget != nullptr)
 	{
-		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
-		IsInventoryVisible = true;
-	}
-	else
-	{
-		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
-		IsInventoryVisible = false;
+		if (Visible)
+		{
+			InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+			IsInventoryVisible = true;
+		}
+		else
+		{
+			InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+			IsInventoryVisible = false;
+		}
 	}
 }
 //Return true if inventory is visible

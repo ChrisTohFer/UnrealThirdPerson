@@ -38,7 +38,8 @@ protected:
 	FString AmmoType;
 
 	//Reference to the ammo in inventory
-	ABaseInventoryItem* AmmoPtr;
+	UPROPERTY()
+	ABaseInventoryItem* AmmoPtr = nullptr;
 
 	//Define the location of the gun muzzle
 	UPROPERTY(EditAnywhere)
@@ -53,7 +54,7 @@ protected:
 	float Cooldown = 0.4f;
 
 	//Continous fire when button held down?
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Automatic = false;
 
 	//Save the time when firing, to check when next shot is possible
@@ -63,7 +64,14 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Mesh;
 
+	//Delegate for removing ammo pointer
+	TScriptDelegate<> AmmoDestroyedFunction;
+
 	//Sets AmmoPtr to appropriate ammotype if in inventory
 	void GetAmmoPtr();
+
+	//Null the ammo pointer when ammo item is destroyed
+	UFUNCTION()
+	void AmmoDestroyed();
 
 };

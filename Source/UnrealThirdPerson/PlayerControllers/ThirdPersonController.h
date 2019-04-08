@@ -32,6 +32,7 @@ protected:
 	//Toggle inventory visibility and player input
 	void ToggleInventoryVisibility();
 
+	UPROPERTY()
 	APawn* PlayerPawn;
 
 };
