@@ -24,15 +24,18 @@ void ABaseItem::PickUpItem()
 
 	if (Inventory != nullptr)
 	{
-		ABaseInventoryItem* InventoryItem = GetWorld()->SpawnActor<ABaseInventoryItem>(InventoryItemBlueprint);
-		InventoryItem->SetQuantity(Quantity);
-
-		int PickedUp = Inventory->PickUpItem(InventoryItem);
-		Quantity -= PickedUp;
-		
-		if (Quantity <= 0)
+		if (InventoryItemBlueprint != nullptr)
 		{
-			Destroy();
+			ABaseInventoryItem* InventoryItem = GetWorld()->SpawnActor<ABaseInventoryItem>(InventoryItemBlueprint);
+			InventoryItem->SetQuantity(Quantity);
+
+			int PickedUp = Inventory->PickUpItem(InventoryItem);
+			Quantity -= PickedUp;
+
+			if (Quantity <= 0)
+			{
+				Destroy();
+			}
 		}
 	}
 }

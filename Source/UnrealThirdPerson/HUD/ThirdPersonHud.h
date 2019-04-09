@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "UserWidget.h"
-#include "Actors/BaseInventory.h"
 
 #include "ThirdPersonHud.generated.h"
 

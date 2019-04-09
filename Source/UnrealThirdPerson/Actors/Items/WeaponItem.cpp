@@ -33,7 +33,7 @@ void AWeaponItem::Equip()
 	
 	//Attach to the player
 	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, false);
+	FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, true);
 	Mesh->AttachToComponent(Player->GetMesh(), AttachRules, FName("Gun"));
 }
 

@@ -2,7 +2,7 @@
 
 #include "ThirdPersonHud.h"
 
-#include "Engine/Engine.h"
+#include "Actors/BaseInventory.h"
 
 
 void AThirdPersonHud::BeginPlay()
@@ -18,6 +18,9 @@ void AThirdPersonHud::SetInventoryVisible(bool Visible)
 	{
 		if (Visible)
 		{
+			ABaseInventory* InventoryPtr = ABaseInventory::GetInventory();
+			if (InventoryPtr != nullptr) InventoryPtr->CallInventoryUpdated();
+
 			InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 			IsInventoryVisible = true;
 		}

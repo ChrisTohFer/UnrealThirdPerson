@@ -41,6 +41,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual int GetRemainingCapacity(ABaseInventoryItem* NewItem);
 
+	//Broadcasts the InventoryUpdated event
+	UFUNCTION()
+	void CallInventoryUpdated();
+
 	/*
 	*Pick up an item, either adding quantity to existing stack or creating a new one
 	*Will either destroy NewItem or add to array
@@ -57,7 +61,7 @@ public:
 	virtual bool DropItem(int Index, FVector Position = FVector::ZeroVector, FRotator Rotator = FRotator::ZeroRotator);
 	//Remove item from the inventory without dropping
 	UFUNCTION(BlueprintCallable)
-	virtual void RemoveItem(int index);
+	virtual void RemoveItem(int Index);
 	//Return the item stored at index, or nullptr if out of range
 	UFUNCTION(BlueprintCallable)
 	ABaseInventoryItem* GetItem(int Index);

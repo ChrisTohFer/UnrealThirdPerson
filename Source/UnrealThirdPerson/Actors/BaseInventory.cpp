@@ -52,39 +52,48 @@ int ABaseInventory::GetRemainingCapacity(ABaseInventoryItem * NewItem)
 		return NewItem->GetQuantityMax();
 	}
 }
+//Broadcasts the InventoryUpdated event
+void ABaseInventory::CallInventoryUpdated()
+{
+	InventoryUpdated.Broadcast();
+}
 /*
 	*Pick up an item, either adding quantity to existing stack or creating a new one
 	*Will either destroy NewItem or add to array
 */
 int ABaseInventory::PickUpItem(ABaseInventoryItem* NewItem)
 {
-	int RemainingCapacity = GetRemainingCapacity(NewItem);
-
-	if (RemainingCapacity > 0)
+	if (NewItem != nullptr)
 	{
-		int AddedQuantity = FMath::Min(RemainingCapacity, NewItem->GetQuantity());
-		ABaseInventoryItem* ItemInInventory = GetItemByName(NewItem->GetName());
+		int RemainingCapacity = GetRemainingCapacity(NewItem);
 
-		if (ItemInInventory != nullptr)
+		if (RemainingCapacity > 0)
 		{
-			ItemInInventory->ChangeQuantity(AddedQuantity);
-			NewItem->Destroy();
+			int AddedQuantity = FMath::Min(RemainingCapacity, NewItem->GetQuantity());
+			ABaseInventoryItem* ItemInInventory = GetItemByName(NewItem->GetName());
+
+			if (ItemInInventory != nullptr)
+			{
+				ItemInInventory->ChangeQuantity(AddedQuantity);
+				NewItem->Destroy();
+			}
+			else
+			{
+				Items.Add(NewItem);
+				NewItem->SetQuantity(AddedQuantity);
+			}
+
+			InventoryUpdated.Broadcast();
+
+			return AddedQuantity;
 		}
 		else
 		{
-			Items.Add(NewItem);
-			NewItem->SetQuantity(AddedQuantity);
+			NewItem->Destroy();
+			return 0;
 		}
-
-		InventoryUpdated.Broadcast();
-
-		return AddedQuantity;
 	}
-	else
-	{
-		NewItem->Destroy();
-		return 0;
-	}
+	else return 0;
 }
 /*
 //Add an item to the inventory; returns false if item was not added
@@ -118,13 +127,13 @@ bool ABaseInventory::DropItem(int Index, FVector Position, FRotator Rotator)
 	else return false;
 }
 //Remove item from the inventory without dropping
-void ABaseInventory::RemoveItem(int index)
+void ABaseInventory::RemoveItem(int Index)
 {
-	if (Items.Num() > index)
+	if (Items.Num() > Index)
 	{
-		ABaseInventoryItem* Item = Items[index];
+		ABaseInventoryItem* Item = Items[Index];
 
-		Items.RemoveAt(index);
+		Items.RemoveAt(Index);
 		if (Item != nullptr)
 		{
 			Item->Destroy();
