@@ -29,7 +29,8 @@ void AWeaponItem::BeginPlay()
 void AWeaponItem::Equip()
 {
 	//Disable collision
-	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Mesh->SetSimulatePhysics(false);
+	Mesh->SetCollisionProfileName("NoCollision");
 	
 	//Attach to the player
 	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
@@ -68,10 +69,31 @@ bool AWeaponItem::Fire()
 
 		//Do stuff with result
 
+		WeaponFired.Broadcast();
+
 		return true;
 	}
 	else return false;
 
+}
+//Returns the amount of ammo available
+int AWeaponItem::GetAmmoAmount()
+{
+	//Check ammo reference and attempt to find if missing
+	if (AmmoPtr == nullptr && AmmoType != "")
+	{
+		GetAmmoPtr();
+		if (AmmoPtr == nullptr)
+		{
+			return 0;
+		}
+	}
+
+	return AmmoPtr->GetQuantity();
+}
+bool AWeaponItem::IsAutomatic()
+{
+	return Automatic;
 }
 //Sets AmmoPtr to appropriate ammotype if in inventory
 void AWeaponItem::GetAmmoPtr()

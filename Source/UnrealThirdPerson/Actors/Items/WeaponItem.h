@@ -8,9 +8,9 @@
 
 #include "WeaponItem.generated.h"
 
-/**
- * 
- */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWeaponFired);
+
 UCLASS()
 class UNREALTHIRDPERSON_API AWeaponItem : public ABaseItem
 {
@@ -30,6 +30,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool Fire();
 
+	//Returns the amount of ammo available
+	UFUNCTION(BlueprintCallable)
+	int GetAmmoAmount();
+
+	bool IsAutomatic();
+
+	//Event called when weapon is fired
+	UPROPERTY(BlueprintAssignable)
+	FWeaponFired WeaponFired;
 
 protected:
 

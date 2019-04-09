@@ -21,6 +21,7 @@ void AWeaponInventoryItem::Unequip()
 	if (WeaponItem != nullptr)
 	{
 		WeaponItem->Destroy();
+		WeaponItem = nullptr;
 	}
 }
 //Get a reference to the equipped weapon
