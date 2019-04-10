@@ -21,6 +21,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//
+	virtual void Tick(float DeltaTime) override;
+
+	bool FireHeld = false;
+
 public:	
 
 	// Called to bind functionality to input
@@ -35,6 +40,9 @@ public:
 	//Fire equipped weapon
 	UFUNCTION()
 	void Fire();
+	//
+	UFUNCTION()
+	void StopFire();
 	//Fire equipped weapon if the weapon is automatic
 	UFUNCTION()
 	void AutomaticFire();

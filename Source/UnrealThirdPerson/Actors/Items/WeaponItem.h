@@ -34,6 +34,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int GetAmmoAmount();
 
+	//Return damage value
+	UFUNCTION(BlueprintCallable)
+	float GetDamage();
+	
 	bool IsAutomatic();
 
 	//Event called when weapon is fired

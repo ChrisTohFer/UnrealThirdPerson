@@ -13,10 +13,23 @@ APlayerCharacter::APlayerCharacter()
 
 }
 
+
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+}
+//
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (FireHeld)
+	{
+		AutomaticFire();
+	}
+
 	
 }
 
@@ -29,6 +42,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("PreviousWeapon", IE_Pressed, this, &APlayerCharacter::PreviousWeapon);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APlayerCharacter::Fire);
 	PlayerInputComponent->BindAction("Fire", IE_Repeat, this, &APlayerCharacter::AutomaticFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &APlayerCharacter::StopFire);
 	PlayerInputComponent->BindAction("PickUpItem", IE_Pressed, this, &APlayerCharacter::Interact);
 }
 
@@ -63,8 +77,14 @@ void APlayerCharacter::Fire()
 		if (Weapon != nullptr)
 		{
 			Weapon->Fire();
+			FireHeld = true;
 		}
 	}
+}
+
+void APlayerCharacter::StopFire()
+{
+	FireHeld = false;
 }
 
 void APlayerCharacter::AutomaticFire()

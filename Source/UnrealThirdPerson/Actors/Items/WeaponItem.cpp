@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Actors/Characters/WeaponTargetCharacter.h"
 
 AWeaponItem::AWeaponItem()
 {
@@ -65,9 +66,15 @@ bool AWeaponItem::Fire()
 		FHitResult HitResult;
 		FVector StartTrace = GetActorLocation() + MuzzleRelativeLocation;
 		FVector EndTrace = StartTrace + 10000.f * GetActorRotation().Vector();
-		GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn);
 
-		//Do stuff with result
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
+		{
+			AWeaponTargetCharacter* Target = Cast<AWeaponTargetCharacter>(HitResult.Actor);
+			if (Target != nullptr)
+			{
+				Target->HitByWeapon(this);
+			}
+		}
 
 		WeaponFired.Broadcast();
 
@@ -90,6 +97,11 @@ int AWeaponItem::GetAmmoAmount()
 	}
 
 	return AmmoPtr->GetQuantity();
+}
+//Return damage value
+float AWeaponItem::GetDamage()
+{
+	return DamagePerShot;
 }
 bool AWeaponItem::IsAutomatic()
 {
