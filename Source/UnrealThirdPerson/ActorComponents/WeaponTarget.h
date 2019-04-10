@@ -3,24 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Components/ActorComponent.h"
 #include "Actors/Items/WeaponItem.h"
 
-#include "WeaponTargetCharacter.generated.h"
-
+#include "WeaponTarget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponHit, AWeaponItem*, Weapon);
 
-UCLASS()
-class UNREALTHIRDPERSON_API AWeaponTargetCharacter : public ACharacter
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class UNREALTHIRDPERSON_API UWeaponTarget : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this character's properties
-	AWeaponTargetCharacter();
+public:	
+	// Sets default values for this component's properties
+	UWeaponTarget();
 
-	//Method called when this character is hit by a gun
+	//Method called when actor is hit by a gun
 	UFUNCTION()
 	void HitByWeapon(AWeaponItem* Weapon);
 
@@ -28,4 +27,5 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FWeaponHit WeaponHit;
 
+		
 };

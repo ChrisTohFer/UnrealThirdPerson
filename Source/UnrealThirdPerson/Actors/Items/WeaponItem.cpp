@@ -7,7 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Actors/Characters/WeaponTargetCharacter.h"
+#include "ActorComponents/WeaponTarget.h"
 
 AWeaponItem::AWeaponItem()
 {
@@ -69,10 +69,10 @@ bool AWeaponItem::Fire()
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
 		{
-			AWeaponTargetCharacter* Target = Cast<AWeaponTargetCharacter>(HitResult.Actor);
-			if (Target != nullptr)
+			UWeaponTarget* TargetComponent = HitResult.Actor->FindComponentByClass<UWeaponTarget>();
+			if (TargetComponent != nullptr)
 			{
-				Target->HitByWeapon(this);
+				TargetComponent->HitByWeapon(this);
 			}
 		}
 
