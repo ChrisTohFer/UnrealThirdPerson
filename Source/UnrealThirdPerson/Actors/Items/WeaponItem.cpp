@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "ActorComponents/WeaponTarget.h"
+#include "DrawDebugHelpers.h"
 
 AWeaponItem::AWeaponItem()
 {
@@ -64,8 +65,11 @@ bool AWeaponItem::Fire()
 
 		//Raycast
 		FHitResult HitResult;
-		FVector StartTrace = GetActorLocation() + MuzzleRelativeLocation;
-		FVector EndTrace = StartTrace + 10000.f * GetActorRotation().Vector();
+		FRotator ActorRotation = GetActorRotation();
+		FVector StartTrace = GetActorLocation() +  ActorRotation.RotateVector(MuzzleRelativeLocation);
+		FVector EndTrace = StartTrace + 10000.f * ActorRotation.Vector();
+
+		DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, true, 1.f);
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
 		{
