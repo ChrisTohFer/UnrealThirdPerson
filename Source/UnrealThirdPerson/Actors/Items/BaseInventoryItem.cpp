@@ -14,15 +14,15 @@ ABaseInventoryItem::ABaseInventoryItem()
 
 
 //Attempt to drop item into world; return true if successful
-bool ABaseInventoryItem::DropItem(FVector Location, FRotator Rotation, int Quantity)
+ABaseItem* ABaseInventoryItem::DropItem(FVector Location, FRotator Rotation, int Quantity)
 {
 	if (ItemBlueprint != nullptr)
 	{
 		ABaseItem* Item = GetWorld()->SpawnActor<ABaseItem>(ItemBlueprint, Location, Rotation);
 		Item->SetQuantity(Quantity);
-		return true;
+		return Item;
 	}
-	else return false;
+	else return nullptr;
 }
 
 

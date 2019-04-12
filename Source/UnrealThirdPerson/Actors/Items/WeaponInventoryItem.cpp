@@ -4,13 +4,29 @@
 
 #include "Engine/World.h"
 
+
+//Attempt to drop item into world; return true if successful
+//Override to update loaded ammo quantity
+ABaseItem* AWeaponInventoryItem::DropItem(FVector Location, FRotator Rotation, int Quantity)
+{
+	ABaseItem* Item = ABaseInventoryItem::DropItem(Location, Rotation, Quantity);
+	AWeaponItem* Weapon = Cast<AWeaponItem>(Item);
+
+	if (Weapon != nullptr)
+	{
+		Weapon->SetAmmoLoaded(LoadedAmmo);
+	}
+
+	return Item;
+}
+
 //Method to equip this weapon
 void AWeaponInventoryItem::Equip()
 {
 	if (WeaponItem == nullptr)
 	{
 		WeaponItem = GetWorld()->SpawnActor<AWeaponItem>(ItemBlueprint);
-
+		WeaponItem->SetAmmoLoaded(LoadedAmmo);
 		WeaponItem->Equip();
 	}
 }
@@ -20,6 +36,7 @@ void AWeaponInventoryItem::Unequip()
 {
 	if (WeaponItem != nullptr)
 	{
+		LoadedAmmo = WeaponItem->GetAmmoLoaded();
 		WeaponItem->Destroy();
 		WeaponItem = nullptr;
 	}
@@ -28,4 +45,14 @@ void AWeaponInventoryItem::Unequip()
 AWeaponItem * AWeaponInventoryItem::GetWeapon()
 {
 	return WeaponItem;
+}
+//Get amount of ammo loaded in weapon
+int AWeaponInventoryItem::GetLoadedAmmo()
+{
+	return LoadedAmmo;
+}
+//Set amount of ammo loaded in weapon
+void AWeaponInventoryItem::SetLoadedAmmo(int Value)
+{
+	LoadedAmmo = Value;
 }

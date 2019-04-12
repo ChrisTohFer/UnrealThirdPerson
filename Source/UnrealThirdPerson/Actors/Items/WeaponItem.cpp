@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "ActorComponents/WeaponTarget.h"
+#include "WeaponInventoryItem.h"
 #include "DrawDebugHelpers.h"
 
 AWeaponItem::AWeaponItem()
@@ -23,8 +24,21 @@ void AWeaponItem::BeginPlay()
 	Super::BeginPlay();
 
 	LastTimeFired = UGameplayStatics::GetTimeSeconds(GetWorld()) - Cooldown;
+}
 
-	AmmoDestroyedFunction.BindUFunction(this, "AmmoDestroyed");
+//Attempt to add the item to the inventory; returns false if inventory full
+//Override sets the loaded ammo variable of the inventory item
+ABaseInventoryItem * AWeaponItem::PickUpItem()
+{
+	ABaseInventoryItem *InventoryItem = ABaseItem::PickUpItem();
+
+	AWeaponInventoryItem* WeaponItem = Cast<AWeaponInventoryItem>(InventoryItem);
+	if (WeaponItem != nullptr)
+	{
+		WeaponItem->SetLoadedAmmo(LoadedAmmo);
+	}
+
+	return InventoryItem;
 }
 
 //Set weapon parent to player, disable collider
@@ -43,96 +57,108 @@ void AWeaponItem::Equip()
 //Attempt to fire the weapon; returns false if unable to fire for any reason
 bool AWeaponItem::Fire()
 {
-	//Check ammo
-	if (AmmoPtr == nullptr && AmmoType != "")
-	{
-		GetAmmoPtr();
-		if (AmmoPtr == nullptr)
-		{
-			return false;
-		}
-	}
-
 	//Check cooldown
 	float CurrentTime = UGameplayStatics::GetTimeSeconds(GetWorld());
 	if (CurrentTime >= Cooldown + LastTimeFired)
 	{
-		LastTimeFired = CurrentTime;
-		if (AmmoPtr != nullptr)
+		//Check ammo
+		if (LoadedAmmo > 0 || AmmoCapacity == 0)
 		{
-			AmmoPtr->ChangeQuantity(-1);
-		}
+			LastTimeFired = CurrentTime;
+			--LoadedAmmo;
 
-		//Raycast
-		FHitResult HitResult;
-		FRotator ActorRotation = GetActorRotation();
-		FVector StartTrace = GetActorLocation() +  ActorRotation.RotateVector(MuzzleRelativeLocation);
-		FVector EndTrace = StartTrace + 10000.f * ActorRotation.Vector();
+			//Raycast
+			FHitResult HitResult;
+			FRotator ActorRotation = GetActorRotation();
+			FVector StartTrace = GetActorLocation() + ActorRotation.RotateVector(MuzzleRelativeLocation);
+			FVector EndTrace = StartTrace + 10000.f * ActorRotation.Vector();
 
-		DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, true, 1.f);
+			//Debug line
+			DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, true, 1.f);
 
-		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
-		{
-			UWeaponTarget* TargetComponent = HitResult.Actor->FindComponentByClass<UWeaponTarget>();
-			if (TargetComponent != nullptr)
+			//Check if hit anything
+			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
 			{
-				TargetComponent->HitByWeapon(this);
+				UWeaponTarget* TargetComponent = HitResult.Actor->FindComponentByClass<UWeaponTarget>();
+				if (TargetComponent != nullptr)
+				{
+					TargetComponent->HitByWeapon(this);
+				}
 			}
+
+			WeaponFired.Broadcast();
+
+			return true;
 		}
+		else
+		{
+			Reload();
 
-		WeaponFired.Broadcast();
-
-		return true;
+			return false;
+		}
 	}
 	else return false;
 
 }
-//Returns the amount of ammo available
-int AWeaponItem::GetAmmoAmount()
+//Reload the weapon, returns true if successful
+bool AWeaponItem::Reload()
 {
-	//Check ammo reference and attempt to find if missing
-	if (AmmoPtr == nullptr && AmmoType != "")
-	{
-		GetAmmoPtr();
-		if (AmmoPtr == nullptr)
-		{
-			return 0;
-		}
-	}
+	ABaseInventoryItem* AmmoPtr = GetAmmoPtr();
 
-	return AmmoPtr->GetQuantity();
+	if (AmmoPtr != nullptr)
+	{
+		//WILL MOVE THIS TO A DELAYED METHOD AFTER CONFIRMED TO WORK
+		int AmmoToLoad = FMath::Min(AmmoPtr->GetQuantity(), AmmoCapacity - LoadedAmmo);
+
+		LoadedAmmo += AmmoToLoad;
+		AmmoPtr->ChangeQuantity(-AmmoToLoad);
+
+		return true;
+	}
+	else return false;
+}
+//Set the amount of ammo loaded
+void AWeaponItem::SetAmmoLoaded(int Value)
+{
+	LoadedAmmo = Value;
+}
+//Returns the amount of ammo loaded in weapon
+int AWeaponItem::GetAmmoLoaded()
+{
+	return LoadedAmmo;
+}
+//Returns the amount of ammo available in inventory
+int AWeaponItem::GetAmmoInventory()
+{
+	ABaseInventoryItem* AmmoPtr = GetAmmoPtr();
+
+	if (AmmoPtr != nullptr)
+	{
+		return AmmoPtr->GetQuantity();
+	}
+	else return 0;
 }
 //Return damage value
 float AWeaponItem::GetDamage()
 {
 	return DamagePerShot;
 }
+//Return true if automatic
 bool AWeaponItem::IsAutomatic()
 {
 	return Automatic;
 }
-//Sets AmmoPtr to appropriate ammotype if in inventory
-void AWeaponItem::GetAmmoPtr()
+//Get pointer to appropriate ammotype if in inventory
+ABaseInventoryItem* AWeaponItem::GetAmmoPtr()
 {
 	ABaseInventory* Inventory = ABaseInventory::GetInventory();
 
 	if (Inventory != nullptr)
 	{
-		AmmoPtr = Inventory->GetItemByName(AmmoType);
+		return Inventory->GetItemByName(AmmoType);
 	}
 	else
 	{
-		AmmoPtr = nullptr;
+		return nullptr;
 	}
-
-	if (AmmoPtr != nullptr)
-	{
-		AmmoPtr->OnDestroyed.Add(AmmoDestroyedFunction);
-	}
-}
-//Null the ammo pointer when ammo item is destroyed
-void AWeaponItem::AmmoDestroyed()
-{
-	AmmoPtr->OnDestroyed.Remove(AmmoDestroyedFunction);
-	AmmoPtr = nullptr;
 }

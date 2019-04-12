@@ -18,7 +18,7 @@ void ABaseItem::BeginPlay()
 }
 
 //Attempt to pick up the item
-void ABaseItem::PickUpItem()
+ABaseInventoryItem* ABaseItem::PickUpItem()
 {
 	ABaseInventory* Inventory = ABaseInventory::GetInventory();
 
@@ -36,8 +36,12 @@ void ABaseItem::PickUpItem()
 			{
 				Destroy();
 			}
+
+			return InventoryItem;
 		}
 	}
+
+	return nullptr;
 }
 //Set the quantity of the item
 void ABaseItem::SetQuantity(int NewQuantity)

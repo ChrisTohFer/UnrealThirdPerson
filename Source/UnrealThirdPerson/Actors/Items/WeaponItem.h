@@ -22,6 +22,10 @@ public:
 
 	virtual void BeginPlay() override;
 
+	//Attempt to add the item to the inventory; returns false if inventory full
+	//Override sets the loaded ammo variable of the inventory item
+	virtual ABaseInventoryItem* PickUpItem() override;
+
 	//Set weapon parent to player, disable collider
 	UFUNCTION(BlueprintCallable)
 	virtual void Equip();
@@ -30,14 +34,28 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool Fire();
 
-	//Returns the amount of ammo available
+	//Reload the weapon, returns true if successful
 	UFUNCTION(BlueprintCallable)
-	int GetAmmoAmount();
+	bool Reload();
+
+	//Set the amount of ammo loaded
+	UFUNCTION(BlueprintCallable)
+	void SetAmmoLoaded(int Value);
+
+	//Returns the amount of ammo loaded in weapon
+	UFUNCTION(BlueprintCallable)
+	int GetAmmoLoaded();
+
+	//Returns the amount of ammo available in inventory
+	UFUNCTION(BlueprintCallable)
+	int GetAmmoInventory();
 
 	//Return damage value
 	UFUNCTION(BlueprintCallable)
 	float GetDamage();
 	
+	//Return true if automatic
+	UFUNCTION(BlueprintCallable)
 	bool IsAutomatic();
 
 	//Event called when weapon is fired
@@ -66,6 +84,14 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float Cooldown = 0.4f;
 
+	//Currently loaded ammo
+	UPROPERTY(EditAnywhere)
+	int LoadedAmmo = 0;
+
+	//Ammo capacity
+	UPROPERTY(EditAnywhere)
+	int AmmoCapacity = 0;
+
 	//Continous fire when button held down?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Automatic = false;
@@ -77,14 +103,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Mesh;
 
-	//Delegate for removing ammo pointer
-	TScriptDelegate<> AmmoDestroyedFunction;
-
-	//Sets AmmoPtr to appropriate ammotype if in inventory
-	void GetAmmoPtr();
-
-	//Null the ammo pointer when ammo item is destroyed
-	UFUNCTION()
-	void AmmoDestroyed();
+	//Get pointer to appropriate ammotype if in inventory
+	ABaseInventoryItem* GetAmmoPtr();
 
 };

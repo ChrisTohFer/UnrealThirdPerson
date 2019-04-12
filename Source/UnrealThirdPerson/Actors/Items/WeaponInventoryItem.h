@@ -18,6 +18,10 @@ class UNREALTHIRDPERSON_API AWeaponInventoryItem : public ABaseInventoryItem
 	
 public:
 
+	//Attempt to drop item into world; return true if successful
+	//Override to update loaded ammo quantity
+	ABaseItem* DropItem(FVector Location, FRotator Rotation, int Quantity) override;
+
 	//Method to equip this weapon
 	UFUNCTION()
 	void Equip();
@@ -30,10 +34,22 @@ public:
 	UFUNCTION()
 	AWeaponItem* GetWeapon();
 
+	//Get amount of ammo loaded in weapon
+	UFUNCTION(BlueprintCallable)
+	int GetLoadedAmmo();
+
+	//Set amount of ammo loaded in weapon
+	UFUNCTION(BlueprintCallable)
+	void SetLoadedAmmo(int Value);
+
 protected:
 	
 	//Reference to weapon in game
 	UPROPERTY()
 	AWeaponItem* WeaponItem = nullptr;
+
+	//Ammo loaded in weapon
+	UPROPERTY()
+	int LoadedAmmo = 0;
 
 };

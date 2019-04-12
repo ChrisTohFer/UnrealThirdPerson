@@ -21,7 +21,7 @@ public:
 
 	//Attempt to add the item to the inventory; returns false if inventory full
 	UFUNCTION(BlueprintCallable)
-	virtual void PickUpItem();
+	virtual ABaseInventoryItem* PickUpItem();
 	//Set the quantity of the item
 	UFUNCTION(BlueprintCallable)
 	void SetQuantity(int NewQuantity);
