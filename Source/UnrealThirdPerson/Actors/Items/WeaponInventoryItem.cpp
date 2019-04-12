@@ -14,7 +14,14 @@ ABaseItem* AWeaponInventoryItem::DropItem(FVector Location, FRotator Rotation, i
 
 	if (Weapon != nullptr)
 	{
-		Weapon->SetAmmoLoaded(LoadedAmmo);
+		if (WeaponItem != nullptr)
+		{
+			Weapon->SetAmmoLoaded(WeaponItem->GetAmmoLoaded());
+		}
+		else
+		{
+			Weapon->SetAmmoLoaded(LoadedAmmo);
+		}
 	}
 
 	return Item;
@@ -55,4 +62,8 @@ int AWeaponInventoryItem::GetLoadedAmmo()
 void AWeaponInventoryItem::SetLoadedAmmo(int Value)
 {
 	LoadedAmmo = Value;
+	if (WeaponItem != nullptr)
+	{
+		WeaponItem->SetAmmoLoaded(Value);
+	}
 }
