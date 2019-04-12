@@ -23,6 +23,7 @@ void AWeaponItem::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Set last time fired so that gun can be fired immediately
 	LastTimeFired = UGameplayStatics::GetTimeSeconds(GetWorld()) - Cooldown;
 }
 
@@ -58,35 +59,38 @@ void AWeaponItem::Equip()
 bool AWeaponItem::Fire()
 {
 	//Check cooldown
-	float CurrentTime = UGameplayStatics::GetTimeSeconds(GetWorld());
-	if (CurrentTime >= Cooldown + LastTimeFired)
+	if (UGameplayStatics::GetTimeSeconds(GetWorld()) >= Cooldown + LastTimeFired)
 	{
 		//Check ammo
-		if (LoadedAmmo > 0 || AmmoCapacity == 0)
+
+		if (AmmoCapacity == 0)
 		{
-			LastTimeFired = CurrentTime;
+			ABaseInventoryItem* AmmoPtr = GetAmmoPtr();
+			if (AmmoPtr != nullptr)
+			{
+				AmmoPtr->ChangeQuantity(-1);
+
+				FireFunction();
+
+				return true;
+			}
+			else if (AmmoType == "")
+			{
+				FireFunction();
+
+				return true;
+			}
+			else
+			{
+				
+				return false;
+			}
+		}
+		else if (LoadedAmmo > 0)
+		{
 			--LoadedAmmo;
 
-			//Raycast
-			FHitResult HitResult;
-			FRotator ActorRotation = GetActorRotation();
-			FVector StartTrace = GetActorLocation() + ActorRotation.RotateVector(MuzzleRelativeLocation);
-			FVector EndTrace = StartTrace + 10000.f * ActorRotation.Vector();
-
-			//Debug line
-			DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, true, 1.f);
-
-			//Check if hit anything
-			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
-			{
-				UWeaponTarget* TargetComponent = HitResult.Actor->FindComponentByClass<UWeaponTarget>();
-				if (TargetComponent != nullptr)
-				{
-					TargetComponent->HitByWeapon(this);
-				}
-			}
-
-			WeaponFired.Broadcast();
+			FireFunction();
 
 			return true;
 		}
@@ -161,4 +165,30 @@ ABaseInventoryItem* AWeaponItem::GetAmmoPtr()
 	{
 		return nullptr;
 	}
+}
+//Handle raycast and events during firing
+void AWeaponItem::FireFunction()
+{
+	LastTimeFired = UGameplayStatics::GetTimeSeconds(GetWorld());
+
+	//Raycast
+	FHitResult HitResult;
+	FRotator ActorRotation = GetActorRotation();
+	FVector StartTrace = GetActorLocation() + ActorRotation.RotateVector(MuzzleRelativeLocation);
+	FVector EndTrace = StartTrace + 10000.f * ActorRotation.Vector();
+
+	//Debug line
+	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Red, true, 1.f);
+
+	//Check if hit anything
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
+	{
+		UWeaponTarget* TargetComponent = HitResult.Actor->FindComponentByClass<UWeaponTarget>();
+		if (TargetComponent != nullptr)
+		{
+			TargetComponent->HitByWeapon(this);
+		}
+	}
+
+	WeaponFired.Broadcast();
 }

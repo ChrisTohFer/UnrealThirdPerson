@@ -106,4 +106,8 @@ protected:
 	//Get pointer to appropriate ammotype if in inventory
 	ABaseInventoryItem* GetAmmoPtr();
 
+	//Handle raycast and events during firing
+	UFUNCTION()
+	void FireFunction();
+
 };
