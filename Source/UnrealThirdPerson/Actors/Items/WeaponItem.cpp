@@ -142,6 +142,16 @@ int AWeaponItem::GetAmmoInventory()
 	}
 	else return 0;
 }
+//Returns the ammo type as string
+FString AWeaponItem::GetAmmoType()
+{
+	return AmmoType;
+}
+//Returns the ammo capacity
+int AWeaponItem::GetAmmoCapacity()
+{
+	return AmmoCapacity;
+}
 //Return damage value
 float AWeaponItem::GetDamage()
 {
@@ -151,6 +161,16 @@ float AWeaponItem::GetDamage()
 bool AWeaponItem::IsAutomatic()
 {
 	return Automatic;
+}
+//Set pointer to inventory weapon parent
+void AWeaponItem::SetInventoryWeaponPtr(AWeaponInventoryItem* Value)
+{
+	InventoryWeaponPtr = Value;
+}
+//Get pointer to inventory weapon parent
+AWeaponInventoryItem * AWeaponItem::GetInventoryWeaponPtr()
+{
+	return InventoryWeaponPtr;
 }
 //Get pointer to appropriate ammotype if in inventory
 ABaseInventoryItem* AWeaponItem::GetAmmoPtr()

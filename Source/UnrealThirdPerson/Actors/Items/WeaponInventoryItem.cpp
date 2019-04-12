@@ -3,6 +3,7 @@
 #include "WeaponInventoryItem.h"
 
 #include "Engine/World.h"
+#include "Actors/BaseInventory.h"
 
 
 //Attempt to drop item into world; return true if successful
@@ -34,6 +35,7 @@ void AWeaponInventoryItem::Equip()
 	{
 		WeaponItem = GetWorld()->SpawnActor<AWeaponItem>(ItemBlueprint);
 		WeaponItem->SetAmmoLoaded(LoadedAmmo);
+		WeaponItem->SetInventoryWeaponPtr(this);
 		WeaponItem->Equip();
 	}
 }
@@ -65,5 +67,10 @@ void AWeaponInventoryItem::SetLoadedAmmo(int Value)
 	if (WeaponItem != nullptr)
 	{
 		WeaponItem->SetAmmoLoaded(Value);
+		ABaseInventory* InventoryPtr = ABaseInventory::GetInventory();
+		if (InventoryPtr != nullptr)
+		{
+			InventoryPtr->CallInventoryUpdated();
+		}
 	}
 }

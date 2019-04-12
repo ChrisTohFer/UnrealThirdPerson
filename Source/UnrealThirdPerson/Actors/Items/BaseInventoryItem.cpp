@@ -58,6 +58,12 @@ int ABaseInventoryItem::ChangeQuantity(int Change)
 {
 	Quantity += Change;
 
+	ABaseInventory* InventoryPtr = ABaseInventory::GetInventory();
+	if (InventoryPtr != nullptr)
+	{
+		InventoryPtr->CallInventoryUpdated();
+	}
+
 	RemoveIfEmpty();
 
 	return Quantity;

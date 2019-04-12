@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Actors/Items/BaseItem.h"
 #include "Components/StaticMeshComponent.h"
+#include "WeaponInventoryItem.h"
 
 #include "WeaponItem.generated.h"
 
@@ -50,6 +51,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int GetAmmoInventory();
 
+	//Returns the ammo type as string
+	UFUNCTION(BlueprintCallable)
+	FString GetAmmoType();
+
+	//Returns the ammo capacity
+	UFUNCTION(BlueprintCallable)
+	int GetAmmoCapacity();
+
 	//Return damage value
 	UFUNCTION(BlueprintCallable)
 	float GetDamage();
@@ -62,15 +71,23 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FWeaponFired WeaponFired;
 
+	//Set pointer to inventory weapon parent
+	UFUNCTION()
+	void SetInventoryWeaponPtr(AWeaponInventoryItem* Value);
+
+	//Get pointer to inventory weapon parent
+	UFUNCTION(BlueprintCallable)
+	AWeaponInventoryItem* GetInventoryWeaponPtr();
+
 protected:
 
 	//The name of the ammo this weapon uses; leave blank for ammoless weapons
 	UPROPERTY(EditAnywhere)
 	FString AmmoType;
 
-	//Reference to the ammo in inventory
+	//Reference to inventoryweapon parent
 	UPROPERTY()
-	ABaseInventoryItem* AmmoPtr = nullptr;
+	AWeaponInventoryItem* InventoryWeaponPtr = nullptr;
 
 	//Define the location of the gun muzzle
 	UPROPERTY(EditAnywhere)

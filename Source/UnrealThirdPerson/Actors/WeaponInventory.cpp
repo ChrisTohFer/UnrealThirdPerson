@@ -52,6 +52,8 @@ void AWeaponInventory::SetEquippedWeapon(int Index)
 			CurrentWeapon = nullptr;
 		}
 	}
+
+	WeaponSwapped.Broadcast(GetCurrentWeapon());
 }
 //Equip next weapon
 void AWeaponInventory::EquipNextWeapon()

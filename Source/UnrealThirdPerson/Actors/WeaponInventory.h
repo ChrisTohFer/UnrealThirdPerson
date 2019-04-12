@@ -9,9 +9,9 @@
 
 #include "WeaponInventory.generated.h"
 
-/**
- * 
- */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponSwapped, AWeaponItem*, Weapon);
+
 UCLASS()
 class UNREALTHIRDPERSON_API AWeaponInventory : public ABaseInventory
 {
@@ -42,6 +42,10 @@ public:
 	//Get currently equipped weapon
 	UFUNCTION(BlueprintCallable)
 	AWeaponItem* GetCurrentWeapon();
+
+	//Event called whenever weapon is changed
+	UPROPERTY(BlueprintAssignable)
+	FWeaponSwapped WeaponSwapped;
 
 protected:
 
