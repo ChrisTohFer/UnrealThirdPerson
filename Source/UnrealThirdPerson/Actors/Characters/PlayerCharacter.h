@@ -53,4 +53,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FPlayerInteraction PlayerInteraction;
 
+	//Hit result giving location and actor information for the centre of the screen
+	UPROPERTY(BlueprintReadWrite)
+	FHitResult ScreenCentreHitResult;
+
 };

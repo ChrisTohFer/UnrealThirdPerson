@@ -4,6 +4,7 @@
 #include "Components/InputComponent.h"
 #include "Actors/WeaponInventory.h"
 #include "GameFramework/PlayerController.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -25,12 +26,20 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Raycast screen centre and save hitresult for use in derived classes/blueprints
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (PlayerController != nullptr)
+	{
+		FVector2D ViewPortCentre = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY()) / 2.f;
+		PlayerController->GetHitResultAtScreenPosition(ViewPortCentre, ECC_WorldStatic, true, ScreenCentreHitResult);
+	}
+
+	//Handle automatic fire
 	if (FireHeld)
 	{
 		AutomaticFire();
 	}
 
-	
 }
 
 // Called to bind functionality to input
