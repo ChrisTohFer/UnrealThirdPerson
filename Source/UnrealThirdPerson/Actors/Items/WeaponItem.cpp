@@ -203,10 +203,13 @@ void AWeaponItem::FireFunction()
 	//Check if hit anything
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Pawn))
 	{
-		UWeaponTarget* TargetComponent = HitResult.Actor->FindComponentByClass<UWeaponTarget>();
-		if (TargetComponent != nullptr)
+		if (HitResult.Actor != nullptr)
 		{
-			TargetComponent->HitByWeapon(this);
+			UWeaponTarget* TargetComponent = HitResult.Actor->FindComponentByClass<UWeaponTarget>();
+			if (TargetComponent != nullptr)
+			{
+				TargetComponent->HitByWeapon(this);
+			}
 		}
 	}
 
